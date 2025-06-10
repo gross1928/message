@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from src import config
 from telethon import TelegramClient, events
 
 from src.config import TELEGRAM_API_ID, TELEGRAM_API_HASH, TELEGRAM_SESSION_NAME
