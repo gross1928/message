@@ -23,7 +23,7 @@ def get_all_subscribed_channels():
 
 async def main():
     """The main function to run the client."""
-    await client.start()
+    await client.start(phone=config.TELEGRAM_PHONE)
     logger.info("Telegram client started.")
 
     all_channels = get_all_subscribed_channels()
