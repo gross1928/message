@@ -1,0 +1,5 @@
+python-telegram-bot[ext]
+supabase
+openai
+python-dotenv
+telethon
