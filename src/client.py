@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os
 from src import config
 from telethon import TelegramClient, events
 
@@ -24,7 +25,16 @@ def get_all_subscribed_channels():
 
 async def main():
     """The main function to run the client."""
-    await client.start(phone=config.TELEGRAM_PHONE)
+        # Check if a session file already exists.
+    # On Railway, main.py should create this file from an env var.
+    # On a local machine, it will be created after the first successful login.
+    session_file = f"{config.TELEGRAM_SESSION_NAME}.session"
+    if os.path.exists(session_file):
+        await client.start()
+    else:
+        # This path is for the very first local run, or if the session env var is not set on Railway.
+        # The latter case will fail, which is expected as the session string is the correct auth method.
+        await client.start(phone=config.TELEGRAM_PHONE)
     logger.info("Telegram client started.")
 
     all_channels = get_all_subscribed_channels()

@@ -18,6 +18,9 @@ def run_client():
     asyncio.run(client_main())
 
 if __name__ == "__main__":
+    # Create the session file from env var before starting any process
+    create_session_file()
+
     # Create two processes
     bot_process = multiprocessing.Process(target=run_bot)
     client_process = multiprocessing.Process(target=run_client)
