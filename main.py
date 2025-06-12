@@ -1,20 +1,47 @@
 import asyncio
 import multiprocessing
 import os
+import base64
+import logging
+
+# Configure basic logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 # We need to set the working directory for the subprocesses to find the modules
 project_root = os.path.dirname(os.path.abspath(__file__))
 
+# Import config after setting up the path if necessary
+from src import config
+
+def create_session_file():
+    """
+    Checks for a session string in env variables, decodes it,
+    and writes it to a .session file.
+    """
+    session_string = config.TELETHON_SESSION_STRING
+    if session_string:
+        session_file = f"{config.TELEGRAM_SESSION_NAME}.session"
+        try:
+            with open(session_file, "wb") as f:
+                f.write(base64.b64decode(session_string))
+            logger.info(f"Successfully created session file '{session_file}' from environment variable.")
+        except Exception as e:
+            logger.error(f"Error decoding or writing session file: {e}")
+
 def run_bot():
     """Function to run the Telegram bot."""
     from src.bot import main
-    print("Starting bot process...")
+    logger.info("Starting bot process...")
     main()
 
 def run_client():
     """Function to run the Telethon client."""
     from src.client import main as client_main
-    print("Starting client process...")
+    logger.info("Starting client process...")
     asyncio.run(client_main())
 
 if __name__ == "__main__":
